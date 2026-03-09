@@ -1,0 +1,19 @@
+body{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    background-color: rgb(10, 233, 106);
+}
+#registrer{
+     font-family: cursive;
+border-radius: 10px;
+background-color: rgb(240, 255, 247);
+padding: 20px;
+
+}
+#login{
+    font-family: cursive;
+border-radius: 10px;
+background-color: rgb(240, 255, 247);
+padding: 20px;
+}
