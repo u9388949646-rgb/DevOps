@@ -80,6 +80,7 @@ async function authenticate() //Asynkron funksjon. Denne skal kjøre separat fra
 
         if (loggRes.success === true)
              {
+                window.location.href = "start";
             loggStatusMsg.textContent = "Inlogging vellyket";
             loggStatusMsg.style.color = "green";
         }
@@ -95,3 +96,4 @@ async function authenticate() //Asynkron funksjon. Denne skal kjøre separat fra
         console.log("Try virket ikke");
     }
 }
+

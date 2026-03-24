@@ -1,48 +1,61 @@
-import { registrerBrukere, loggInnBrukere  } from "../models/authModels.js";
+import { registrerBrukere } from "../models/authModels.js"; // Importering av funksjonen registrerBrukere fra authModels.js filen
+import { loggInnBruker } from "../models/authModels.js";
+import { hashThePassword } from "../services/authService.js";
+import { checkHashedPassword } from "../services/authService.js";
 
-
-//export av data fra login
-export async function registrer(req, res) {
-    const { regBrukernavn, regPassord } = req.body;//body fra frontend
+//Export av data fra login, mottar requests (req) og sender respons (res)
+export async function registrer(req, res)
+{
+    const {regBrukernavn, regPassord} = req.body; //Body fra frontend. JSON dataene som klienten sendte i POST requesten
 
     console.log("authController brukernavn: ", regBrukernavn);
     console.log("authController passord: ", regPassord);
 
+    const hashpassord = await hashThePassword(regPassord);
 
-    const { data: registrerBruker } = await registrerBrukere(regBrukernavn, regPassord);
+    console.log("authController hashpassword", hashpassord);
+
+    const { data: registrerBruker } = await registrerBrukere(regBrukernavn, hashpassord); // Venter på svar fra authModels.js
 
     console.log("authController test levering av database", registrerBruker);
 
-    if (registrerBruker) {
+    if(registrerBruker)
+    {
         console.log("authController registrer: Bruker registrert");
         return res.json({ success: true });
     }
-    else {
-        console.log("authController registrer: Bruker ikke registrert");
+    else
+    {
+        console.log("authController registrer: Bruker ikke registrer");
         return res.json({ success: false });
     }
 }
 
-export async function login(req, res) {
-    const { loggBrukernavn, loggPassord } = req.body;//body fra frontend
+export async function login(req, res)
+{
+    const { loggBrukernavn, loggPassord } = req.body;
 
-    console.log("authController loggBrukernavn: ", loggBrukernavn);
-    console.log("authController loggPassord: ", loggPassord);
+    console.log("authController loggBrukernavn", loggBrukernavn);
+    console.log("authController loggPassord", loggPassord);
+
+    const { data: loggBrukere } = await loggInnBruker(loggBrukernavn, loggPassord);
+
+    console.log("authController loggBrukere (Info fra database)", loggBrukere);
+
+    const sjekketPassord = await checkHashedPassword(loggPassord, loggBrukere.Passord);
+
+    console.log("authController sjekk passord", sjekketPassord);
+
     
 
-    const { data: loggBrukere } = await loggInnBrukere(loggBrukernavn, loggPassord);
-
-    console.log("authController loggBrukere info fra database", loggBrukere);
-
-    if (loggBrukere) {
+    if (sjekketPassord.success === true)
+    {
         console.log("authController bruker logget inn");
         return res.json({ success: true });
     }
-    else {
-        console.log("authController bruker logget ikke inn");
+    else
+    {
+        console.log("authController bruker ikke logget inn :(");
         return res.json({ success: false });
     }
 }
-
-
-

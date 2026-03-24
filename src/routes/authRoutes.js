@@ -4,7 +4,8 @@ import * as authController from "../controllers/authController.js"; //Knytter al
 
 const router = Router(); //Opprettelse av en konstant som bruker router pakken
 
-router.post("/registrer", authController.registrer); 
-router.post("/login", authController.login);// Definerer POST-ruten /login og knytter den til login-handleren i authController
+router.post("/registrer", authController.registrer); // Definerer POST-ruten /registrer og knytter den til login-handleren i authController
+
+router.post("/login", authController.login);
 
 export default router; //Eksportering av ruter
